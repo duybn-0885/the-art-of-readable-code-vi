@@ -2,40 +2,49 @@
 
 ![](https://i.imgur.com/RD34tXo.png)
 
-In this chapter, you’ll see how sloppy use of variables makes a program harder to understand.
+Mã nguồn sẽ trở nên vô cùng khó hiểu khi mà việc sử dụng biến bừa bãi, cẩu thả - bạn sẽ nhận thấy điều đó khi mà đọc hết chương này
+
+Đặc biệt, một vài vấn đề mà cần phải quan tâm đó là:
+
+    1. Việc kiểm soát số lượng biến trở nên khó khăn khi mà số lượng quá nhiều
+    2. Phạm vi của biến càng lớn, ba
+    3. Với các biến thường xuyên thay đổi thì việc kiểm soát giá trị của nó càng khó
+
+3 phần dưới đây sẽ giúp bạn giải quyết các vấn đề nêu trên.
+<!-- In this chapter, you’ll see how sloppy use of variables makes a program harder to understand.
 
 Specifically, there are three problems to contend with:
     1. The more variables there are, the harder it is to keep track of them all.
     2. The bigger a variable’s scope, the longer you have to keep track of it.
-    3. The more often a variable changes, the harder it is to keep track of its current value.
-    
-The next three sections discuss how to deal with these issues.
+    3. The more often a variable changes, the harder it is to keep track of its current value. -->
 
-## Eliminating Variables
-In Chapter 8, Breaking Down Giant Expressions, we showed how introducing "explaining” or “summary” variables can make code more readable. These variables were helpful because they broke down giant expressions and acted as a form of documentation.
+<!-- The next three sections discuss how to deal with these issues. -->
 
-In this section, we’re interested in eliminating variables that don’t improve readability. When a variable like this is removed, the new code is more concise and just as easy to understand.
+## Loại bỏ bớt các biến
+Ở chương 8, Đơn giản hóa các công thức khổng lồ, bạn đã được giới thiệu về việc dùng các biến với vai trò "giải thích" hoặc "tổng kết" công thức, làm mã nguồn dễ đọc hơn. Các biến có tác dụng rất lớn trong việc tách nhỏ các công thức và có thể hiểu đây như là một loại tài liệu.
 
-In the following section are a few examples of how these unnecessary variables show up.
+Trong phần này, bạn sẽ nhận biết được các biến như thế nào sẽ không cải thiện việc đọc hiểu mã nguồn. Khi mà xóa bỏ các biến này sẽ giúp mã nguồn trở nên ngắn gọn, đơn giản hơn.
 
-### Useless Temporary Variables
-In the following snippet of Python code, consider the now variable:
+Trong các phần tiếp theo, sẽ có một vài ví dụ về các biến không cần thiết.
+
+### Sử dụng ít biến tạm thời
+Xét ví dụ sau với ngôn ngữ Python, chú ý biến now nhé:
 ```
 now = datetime.datetime.now()
 root_message.last_view_time = now
 ```
-Is now a variable worth keeping? No, and here are the reasons:
+Biến now ở đây thật sự có giá trị gì hay không? Chắc là không vì:
 
-- It isn’t breaking down a complex expression.
-- It doesn’t add clarification—the expression datetime.datetime.now() is clear enough.
-- It’s used only once, so it doesn’t compress any redundant code.
-Without now, the code is just as easy to understand:
+- Nó không chia nhỏ biểu thức phức tạp
+- Nó không mang ý nghĩa giải thích, datetime.datetime.now() đủ rõ ràng rồi
+- Nó được sử dụng một lần duy nhất
+Không có biến now, mã nguồn đơn giản chỉ là:
 ```
 root_message.last_view_time = datetime.datetime.now()
 ```
-Variables like now are usually “leftovers” that remain after code has been edited. The variable now might have been used in multiple places originally. Or maybe the coder anticipated using now multiple times, but never actually needed it.
+Các biến như now thường bị sót lại sau khi mã nguồn được chỉnh sửa, có thể  ban đầu chúng được sử dụng ở rất nhiều nơi. Hoặc lúc viết, lập trình viên nghĩ rằng chúng sẽ được sử dụng nhiều lần, nhưng thực tế thì lại khác, nó chẳng được dùng mấy
 
-### Eliminating Intermediate Results
+### Loại bỏ các biến trung gian
 ![](https://i.imgur.com/di0hmzj.png)
 ```javascript=
 var remove_one = function (array, value_to_remove) {
@@ -51,7 +60,7 @@ var remove_one = function (array, value_to_remove) {
     }
 };
 ```
-The variable index_to_remove is just used to hold an intermediate result. Variables like this can sometimes be eliminated by handling the result as soon as you get it:
+Biến index_to_remove được sử dụng để lưu kết quả trung gian. Các biến như này thường thường sẽ được loại bỏ bằng việc xử lí kết quả ngay khi mà bạn nhận được, kiểu như:
 ```javascript=
 var remove_one = function (array, value_to_remove) {
     for (var i = 0; i < array.length; i += 1) {
@@ -62,13 +71,13 @@ var remove_one = function (array, value_to_remove) {
     }
 };
 ```
-By allowing the code to return early, we got rid of index_to_remove altogether and simplified the code quite a bit.
+Bằng việc xử lí splice và return luôn, chúng ta đã loại bỏ biến index_to_remove và đơn giản hóa mã nguồn.
 
-In general, it’s a good strategy to complete the task as quickly as possible.
+Tổng kết, một chiến lược tốt là hoàn thành task càng nhanh càng tốt.
 
-### Eliminating Control Flow Variables
+### Bỏ đi các biến điều khiển
 
-Sometimes you’ll see this pattern of code in loops:
+Thỉnh thoảng bạn sẽ thấy thiết kế như này:
 
 ```javascript=
 boolean done = false;
@@ -79,14 +88,13 @@ boolean done = false;
         continue;
     }
 }
-
 ```
 
-The variable done might even be set to true in multiple places throughout the loop.
+Biến done được set giá trị thành true rất nhiều lần ở trong vòng lặp.
 
-Code like this is often trying to satisfy some unspoken rule that you shouldn’t break out of the middle of a loop. There is no such rule!
+Làm như vậy chỉ để đáp ứng một quy tắc bất thành văn là không bên thoát ra giữa vòng lặp. Không có quy tắc nào như thế cả!
 
-Variables like done are what we call “control flow variables.” Their sole purpose is to steer the program’s execution—they don’t contain any real program data. In our experience, control flow variables can often be eliminated by making better use of structured programming:
+Biến như done được gọi là "biến điều khiển." Mục đích của nó là chỉ đạo cách chương trình thực thi - nó không chứa bất kì dữ liệu thật sự nào cả. Với quan điểm của tôi, biến điều khiển nên bị loại bỏ bằng việc thiết kế cấu trúc chương trình tối ưu hơn:
 
 ```
 while (/* condition */) {
@@ -96,28 +104,27 @@ while (/* condition */) {
     }
 }
 ```
-This case was pretty easy to fix, but what if there are multiple nested loops for which a simple break wouldn’t suffice? In more complicated cases like that, the solution often involves moving code into a new function (either the code inside the loop, or the entire loop itself)
+Trường hợp này thì xử lí đơn giản rồi, nhưng với các vòng lặp lồng nhau mà chỉ với một lệnh break thì không đủ? Với trường hợp phức tạp thế, hướng giải quyết thường liên quan đến việc tách mã nguồn ra thành các hàm mới (hoặc là đoạn mã ở trong vòng lặp, hoặc là tổng thể cả vòng lặp)
 
-> DO YOU WANT YOUR COWORKERS TO FEEL LIKE
-> THEY’RE IN AN INTERVIEW ALL THE TIME?
-> Microsoft’s Eric Brechner has talked about how a great interview question should involve at least three variables.* It’s probably because dealing with three variables at the same time forces you to think hard! This makes sense for an interview, where you’re trying to push a candidate to the limit.
-> But do you want your coworkers to feel like they’re in an interview while they’re reading your code?
+> BẠN CÓ MUỐN ĐỒNG NGHIỆP CỦA MÌNH CẢM THẤY NHƯ LÀ
+> HỌ LÚC NÀO CŨNG ĐANG Ở TRONG CUỘC PHỎNG VẤN?
+> Eric Brechner của Microsoft đã nói rằng các câu hỏi phỏng vấn tuyệt vời nhất nên liên quan đến 3 biến trở lên.* Nó thật sự đúng bởi vì làm việc với 3 biến cùng một lúc sẽ gây ra khó khăn nhất định! Đấy là cảm giác cho một cuộc phỏng vấn, khi mà bạn cố gắng đẩy ứng viên đến giới hạn.
+> Nhưng bạn muốn đồng nghiệp cảm thấy họ đang thực hiện một cuộc phỏng vấn khi mà họ đang đọc mã nguồn bạn viết ra à?
 
-## Shrink the Scope of Your Variables
+## Rút gọn phạm vi của các biến
 
-We’ve all heard the advice to “avoid global variables.” This is good advice, because it’s hard to keep track of where and how all those global variables are being used. And by “polluting the namespace” (putting a bunch of names there that might conflict with your local variables), code might accidentally modify a global variable when it intended to use a local variable, or vice versa.
+Bạn đã từng nghe lời khuyên "tránh các biến toàn cục." bao giờ chưa. Đó là lời khuyên tốt đấy, bởi vì việc kiểm soát các biến này được sử dụng khi nào và như thế nào là tương đối khó khăn. Và vì sự rắc rối với tên biến (có thể nó sẽ trùng với biến địa phương), một cách vô tình, bạn đã thay đổi biến toàn cục khi mà ý định là làm với biến địa phương, hoặc ngược lại.
 
-In fact, it’s a good idea to “shrink the scope” of all your variables, not just the global ones
+Thật sự, đó là một ý tưởng tuyệt vời khi mà "rút gọn phạm vi" cả tất cả các biến, không chỉ riêng với biến toàn cục
 
 > KEY IDEA
-> Make your variable visible by as few lines of code as possible.
+> Làm cho biến xuất hiện càng ít dòng trên mã nguồn càng tốt
 
-Many programming languages offer multiple scope/access levels, including module, class,
-function, and block scope. Using more restricted access is generally better because it means the variable can be “seen” by fewer lines of code.
+Rất nhiều ngôn ngữ lập trình cung cấp nhiều phạm vi/ cấp độ truy cập, ví dụ như module, class, function, và block. Sử dụng quyền truy cập hạn chế, nhìn tổng thể sẽ tốt hơn bởi vì nó nghĩa là biến của bạn có thể được "nhìn" thấy bởi ít dòng mã nguồn hơn.
 
-Why do this? Because it effectively reduces the number of variables the reader has to think about at the same time. If you were to shrink the scope of all your variables by a factor of two, then on average there would be half as many variables in scope at any one time.
+Tại sao lại thế? Bởi vì nó làm giảm số lượng các biến mà người đọc phải nghĩ đến cùng một lúc một cách hiệu quả. Nếu bạn thu hẹp phạm vi của tất cả các biến theo hệ số hai, thì trung bình sẽ có một nửa số biến trong phạm vi bất kỳ lúc nào .
 
-For example, suppose you have a very large class, with a member variable that’s used by only two methods, in the following way
+Ví dụ, giả sử bạn có một class rất lớn, với một biến mà được dùng bởi chỉ 2 methods, như cách dưới đây
 
 ```
 class LargeClass {
@@ -133,9 +140,9 @@ class LargeClass {
 };
 
 ```
-In some sense, a class member variable is like a “mini-global” inside the realm of the class. For large classes especially, it’s hard to keep track of all the member variables and which methods modify each one. The fewer mini-globals, the better.
+Biến của class như thể  "biến cục bộ thu nhỏ" bên trong khu vực của class. Với các class lớn, thì việc quản lí các biến này và method nào ảnh hưởng đến biến nào là việc không dễ dàng. Biến cục bộ càng nhỏ, càng tốt.
 
-For this case, it may make sense to “demote” str_ to be a local variable:
+Với thường hợp này, nên thu hẹp phạm vi của biến str_ thành biến địa phương:
 
 ```
 class LargeClass {
@@ -149,13 +156,14 @@ class LargeClass {
     // Now other methods can't see str.
 };
 ```
-Another way to restrict access to class members is to make as many methods static as possible. Static methods are a great way to let the reader know “these lines of code are isolated from those variables.”
 
-Or another approach is to break the large class into smaller classes. This approach is helpful only if the smaller classes are in fact isolated from each other. If you were to create two classes that access each other’s members, you haven’t really accomplished anything.
+Cách khác để  hạn chế truy cập đến biến của class là tạo ra càng nhiều static methods càng tốt. Static methods là cách tốt nhất để người đọc biến "dòng mã nguồn nào được tách biệt khỏi các biến đó."
 
-The same goes for breaking up large files into smaller files or large functions into smaller functions. A big motivation for doing so is to isolate data (i.e., variables).
+Hoặc một cách nữa là tách class thành các class nhỏ hơn. Hướng này chỉ có tác dụng nếu các lớp nhỏ hơn không ảnh hưởng qua lại lẫn nhau. Nếu bạn tạo ra 2 class mà truy cập đến nhau, thì thôi, bạn chưa đạt được mục tiêu của mình đâu.
 
-But different languages have different rules for what exactly constitutes a scope. We’d like to point out just a few of the more interesting rules involving the scope of variables. 
+Tương tự với việc chia nhỏ các file lớn thành các file nhỏ hơn hoặc các function lớn thành các function nhỏ hơn. Động lực lớn để làm như vậy là cô lập dữ liệu (tức là các biến).
+
+Nhưng với các ngôn ngữ khác nhau, quy định cho phạm vi lại là khác nhau. Dưới đây, bạn sẽ thấy một số quy định thú vị liên quan đến phạm vi của biến.
 
 ### if Statement Scope in C++
 
